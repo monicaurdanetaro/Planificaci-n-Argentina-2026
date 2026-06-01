@@ -121,7 +121,7 @@
   }
 
   /* Alternating week bg on date boxes — controlled via class on th */
-  thead th.week-odd  .date-box { background:#e4eaf5; }
+  thead th.week-odd  .date-box { background:#d5dff0; }
   thead th.week-even .date-box { background:#eef2fb; }
 
   /* Row label column */
@@ -421,9 +421,22 @@ function renderCalendar(){
     const visibleCourses = COURSES.filter(c=>active.has(c.id));
     const cnt = SESSIONS.filter(s=>{ const d=new Date(s.date); return d.getFullYear()===y&&d.getMonth()===m-1&&active.has(s.cid); }).length;
 
-    // Build a flat list of days with their week index for alternating bg
-    const dayWeekIndex = {}; // ds(day) → weekIndex
-    wks.forEach((week,wi) => week.forEach(day => dayWeekIndex[ds(day)] = wi));
+    // Assign week index by real calendar week (Mon–Fri), using ISO week number
+    // so that Tue/Wed/Thu that start a displayed month still share the same week as Mon
+    function isoWeek(d){
+      const tmp = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()));
+      const dayNum = tmp.getUTCDay() || 7;
+      tmp.setUTCDate(tmp.getUTCDate() + 4 - dayNum);
+      const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(),0,1));
+      return Math.ceil((((tmp - yearStart) / 86400000) + 1)/7);
+    }
+    const dayWeekIndex = {};
+    const seenWeeks = [];
+    wds.forEach(day => {
+      const w = isoWeek(day);
+      if(!seenWeeks.includes(w)) seenWeeks.push(w);
+      dayWeekIndex[ds(day)] = seenWeeks.indexOf(w);
+    });
 
     const block = document.createElement('div');
     block.className='month-block';
