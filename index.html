@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planificación de Formaciones — Argentina 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:        #e8edf7;
+    --bg2:       #dde4f2;
+    --white:     #ffffff;
+    --navy:      #1a2e6b;
+    --blue:      #3b5fe2;
+    --blue-lt:   #eef1fd;
+    --green:     #27ae60;
+    --green-lt:  #e9f7ef;
+    --orange:    #e67e22;
+    --orange-lt: #fef3e7;
+    --red:       #e74c3c;
+    --red-lt:    #fdecea;
+    --purple:    #8e44ad;
+    --purple-lt: #f5eefa;
+    --teal:      #16a085;
+    --teal-lt:   #e8f8f5;
+    --text-mid:  #4a5568;
+    --text-soft: #8896b3;
+    --border:    #d0d9ee;
+    --shadow:    0 2px 12px rgba(26,46,107,0.08);
+    --shadow-md: 0 4px 24px rgba(26,46,107,0.13);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Nunito',sans-serif; background:var(--bg); color:var(--navy); min-height:100vh; }
+
+  /* NAV */
+  .topnav { background:var(--white);border-bottom:1px solid var(--border);padding:0 40px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;box-shadow:var(--shadow); }
+  .nav-brand { display:flex;align-items:center;gap:10px; }
+  .nav-logo { width:34px;height:34px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px; }
+  .nav-brand-title { font-weight:800;font-size:13px;color:var(--navy); }
+  .nav-brand-sub { font-size:10px;color:var(--text-soft);font-weight:500; }
+  .nav-right { display:flex;align-items:center;gap:8px; }
+  .nav-pill { background:var(--blue-lt);color:var(--blue);font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px;display:flex;align-items:center;gap:5px; }
+
+  /* HERO */
+  .hero { background:linear-gradient(135deg,#dde4f4 0%,#e8edf7 60%,#d6dfef 100%);padding:44px 40px 36px;text-align:center;border-bottom:1px solid var(--border); }
+  .hero-eyebrow { font-size:14px;font-weight:700;color:var(--blue);margin-bottom:10px; }
+  .hero h1 { font-size:clamp(22px,3vw,38px);font-weight:900;color:var(--navy);line-height:1.2;margin-bottom:6px; }
+  .hero h1 span { color:var(--blue); }
+  .hero-sub { font-size:16px;color:var(--text-mid);font-weight:600;margin-bottom:28px; }
+  .kpi-row { display:flex;gap:14px;justify-content:center;flex-wrap:wrap;max-width:860px;margin:0 auto; }
+  .kpi { background:var(--white);border-radius:14px;padding:16px 22px 12px;flex:1;min-width:155px;max-width:205px;box-shadow:var(--shadow);text-align:left; }
+  .kpi-val { font-size:26px;font-weight:900;line-height:1;margin-bottom:4px; }
+  .kpi-lbl { font-size:12px;font-weight:600;color:var(--text-soft);margin-bottom:8px; }
+  .kpi-bar { height:3px;border-radius:4px;width:100%;opacity:0.5; }
+
+  /* MAIN */
+  .main { max-width:1380px;margin:0 auto;padding:36px 32px 80px; }
+
+  /* COURSES SUMMARY */
+  .section-title { font-size:15px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:8px;margin-bottom:14px; }
+  .courses-card { background:var(--white);border-radius:16px;box-shadow:var(--shadow);overflow:hidden;border:1px solid var(--border);margin-bottom:28px; }
+  .courses-card-header { padding:16px 22px;border-bottom:1px solid var(--border); }
+  .course-row { display:flex;align-items:center;gap:14px;padding:12px 22px;border-bottom:1px solid var(--border);transition:background .15s;cursor:pointer; }
+  .course-row:last-child { border-bottom:none; }
+  .course-row:hover { background:#eef2fd; }
+  .course-row:hover .course-name { color:var(--blue); }
+  .course-color-bar { width:4px;height:34px;border-radius:4px;flex-shrink:0; }
+  .course-info { flex:1;min-width:0; }
+  .course-name { font-size:13px;font-weight:700;color:var(--navy); }
+  .course-pop { font-size:11px;color:var(--text-soft);font-weight:600;margin-top:1px; }
+  .course-meta { display:flex;gap:7px;align-items:center;flex-shrink:0;flex-wrap:wrap; }
+  .tag { font-size:11px;font-weight:700;padding:3px 9px;border-radius:100px;white-space:nowrap; }
+
+  /* FILTERS */
+  .filters { display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:28px; }
+  .filter-label { font-size:11px;font-weight:700;color:var(--text-soft);text-transform:uppercase;letter-spacing:.06em;margin-right:2px; }
+  .filter-btn { display:inline-flex;align-items:center;gap:6px;background:var(--white);border:1.5px solid var(--border);border-radius:100px;padding:5px 13px;font-size:12px;font-weight:700;color:var(--text-mid);cursor:pointer;transition:all .15s;font-family:'Nunito',sans-serif;white-space:nowrap; }
+  .filter-btn.inactive { opacity:.35;background:var(--bg); }
+  .filter-btn:hover { box-shadow:var(--shadow); }
+  .filter-dot { width:9px;height:9px;border-radius:50%;flex-shrink:0; }
+
+  /* MONTH */
+  .month-block { margin-bottom:40px; }
+  .month-header-row { display:flex;align-items:center;gap:14px;margin-bottom:16px; }
+  .month-badge { background:var(--navy);color:#fff;font-size:13px;font-weight:800;padding:6px 18px;border-radius:100px; }
+  .month-line { flex:1;height:1px;background:var(--border); }
+  .month-count-badge { background:var(--white);border:1.5px solid var(--border);color:var(--text-mid);font-size:12px;font-weight:700;padding:4px 12px;border-radius:100px; }
+
+  /* CALENDAR TABLE */
+  .cal-wrap { background:var(--white);border-radius:16px;border:1px solid var(--border);box-shadow:var(--shadow);overflow:hidden; }
+  .cal-scroll { overflow-x:auto; }
+  .cal-table { width:100%;border-collapse:collapse;table-layout:fixed; }
+
+  /* Header cells — date boxes */
+  .cal-table thead th {
+    border-right:1px solid var(--border);
+    border-bottom:2px solid var(--border);
+    padding:0;
+    /* fixed equal width for every column except the label col */
+  }
+  .cal-table thead th:last-child { border-right:none; }
+  .cal-table thead th.label-th {
+    border-right:2px solid var(--border);
+    width:150px;
+    min-width:150px;
+  }
+
+  /* The date box inside each th */
+  .date-box {
+    padding:9px 6px 7px;
+    text-align:center;
+  }
+  .date-box-dayname {
+    font-size:10px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.07em;color:var(--text-soft);
+    margin-bottom:1px;
+  }
+  .date-box-num {
+    font-size:20px;font-weight:900;color:var(--navy);line-height:1;
+  }
+
+  /* Alternating week bg on date boxes — controlled via class on th */
+  thead th.week-odd  .date-box { background:#e4eaf5; }
+  thead th.week-even .date-box { background:#eef2fb; }
+
+  /* Row label column */
+  .cal-table tbody td.row-label-col {
+    width:150px;min-width:150px;
+    background:#f8f9fd;
+    border-right:2px solid var(--border);
+    border-bottom:1px solid var(--border);
+    padding:0 14px;
+    vertical-align:middle;
+  }
+  .row-label-col:last-child { border-bottom:none; }
+  .row-label-inner { display:flex;align-items:center;gap:8px; }
+  .row-label-bar { width:4px;height:32px;border-radius:4px;flex-shrink:0; }
+  .row-label-name { font-size:11px;font-weight:800;color:var(--navy);line-height:1.2; }
+  .row-label-pop { font-size:9px;font-weight:600;color:var(--text-soft);margin-top:1px; }
+
+  /* Data cells */
+  .cal-table tbody tr td.data-cell {
+    border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    padding:5px;
+    vertical-align:middle;
+    /* same fixed width as header */
+  }
+  .cal-table tbody tr td.data-cell:last-child { border-right:none; }
+  .cal-table tbody tr:last-child td { border-bottom:none; }
+
+  /* Session pill */
+  .sess-pill {
+    border-radius:8px;
+    padding:7px 8px;
+    cursor:pointer;
+    transition:all .15s;
+    border-left:4px solid transparent;
+    height:52px;
+    display:flex;flex-direction:column;justify-content:center;
+  }
+  .sess-pill:hover { filter:brightness(.93);transform:translateY(-1px);box-shadow:var(--shadow); }
+  .sess-pill-name { font-size:10px;font-weight:800;color:var(--navy);line-height:1.2; }
+  .sess-pill-group { font-size:9px;font-weight:700;margin-top:3px;opacity:.8; }
+
+  /* Empty cell */
+  .empty-cell { height:52px;display:flex;align-items:center;justify-content:center; }
+  .empty-dash { width:16px;height:2px;background:var(--border);border-radius:2px; }
+
+  /* MODAL */
+  .overlay { position:fixed;inset:0;background:rgba(26,46,107,.35);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .2s; }
+  .overlay.open { opacity:1;pointer-events:all; }
+  .modal { background:var(--white);border-radius:20px;max-width:520px;width:100%;box-shadow:0 24px 60px rgba(26,46,107,.22);overflow:hidden;transform:translateY(20px);transition:transform .25s cubic-bezier(.34,1.4,.64,1); }
+  .overlay.open .modal { transform:translateY(0); }
+  .modal-top { padding:26px 26px 18px;position:relative; }
+  .modal-close { position:absolute;top:14px;right:14px;background:var(--bg);border:1px solid var(--border);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;color:var(--text-soft);transition:all .15s;font-family:'Nunito',sans-serif; }
+  .modal-close:hover { background:var(--bg2);color:var(--navy); }
+  .modal-eyebrow { font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:7px; }
+  .modal-title { font-size:19px;font-weight:900;color:var(--navy);line-height:1.2;margin-bottom:12px; }
+  .modal-date-tag { display:inline-flex;align-items:center;gap:6px;background:var(--blue-lt);color:var(--blue);font-size:12px;font-weight:700;padding:5px 12px;border-radius:100px; }
+  .modal-body { padding:0 26px 22px; }
+  .modal-grid { display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px;margin-top:16px; }
+  .mfield { background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:11px 13px; }
+  .mfield.wide { grid-column:1/-1; }
+  .mfield-lbl { font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.07em;color:var(--text-soft);margin-bottom:4px; }
+  .mfield-val { font-size:13px;font-weight:700;color:var(--navy);line-height:1.4; }
+  .modal-link-btn { display:flex;align-items:center;justify-content:center;gap:8px;width:100%;background:var(--blue);color:#fff;font-family:'Nunito',sans-serif;font-size:13px;font-weight:800;padding:12px;border-radius:12px;text-decoration:none;transition:background .15s;cursor:pointer;border:none; }
+  .modal-link-btn:hover { background:var(--navy); }
+
+  @media(max-width:700px){ .main{padding:20px 12px 60px;} .hero{padding:30px 16px 24px;} .topnav{padding:0 16px;} .modal-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+
+
+<div class="hero">
+  <h1>Cronograma de <span>Formaciones</span> Argentina <svg style="display:inline-block;vertical-align:middle;margin-left:10px;border-radius:5px;box-shadow:0 2px 8px rgba(0,0,0,0.15);position:relative;top:-3px" width="54" height="36" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg"><rect width="900" height="200" y="0" fill="#74acdf"/><rect width="900" height="200" y="200" fill="#fff"/><rect width="900" height="200" y="400" fill="#74acdf"/><g transform="translate(450,300)"><circle r="58" fill="#F6B40E" stroke="#85340A" stroke-width="5"/><circle r="38" fill="#F6B40E"/><g stroke="#85340A" stroke-width="5"><line x1="0" y1="-70" x2="0" y2="-86"/><line x1="0" y1="70" x2="0" y2="86"/><line x1="-70" y1="0" x2="-86" y2="0"/><line x1="70" y1="0" x2="86" y2="0"/><line x1="-49" y1="-49" x2="-61" y2="-61"/><line x1="49" y1="-49" x2="61" y2="-61"/><line x1="-49" y1="49" x2="-61" y2="61"/><line x1="49" y1="49" x2="61" y2="61"/><line x1="-26" y1="-66" x2="-32" y2="-80"/><line x1="26" y1="-66" x2="32" y2="-80"/><line x1="-66" y1="-26" x2="-80" y2="-32"/><line x1="66" y1="-26" x2="80" y2="-32"/><line x1="-26" y1="66" x2="-32" y2="80"/><line x1="26" y1="66" x2="32" y2="80"/><line x1="-66" y1="26" x2="-80" y2="32"/><line x1="66" y1="26" x2="80" y2="32"/></g><ellipse cx="0" cy="-8" rx="13" ry="17" fill="#85340A"/><circle cx="-9" cy="-4" r="5" fill="#85340A"/><circle cx="9" cy="-4" r="5" fill="#85340A"/><path d="M -13 6 Q 0 20 13 6" stroke="#85340A" stroke-width="3" fill="none"/></g></svg></h1>
+  <p class="hero-sub">Junio – Julio 2026</p>
+  <div class="kpi-row" id="kpiRow"></div>
+</div>
+
+<div class="main">
+  <div class="section-title">📋 Resumen por Curso</div>
+  <div class="courses-card">
+    <div class="courses-card-header">
+      <span style="font-size:13px;font-weight:700;color:var(--text-mid)">6 cursos planificados</span>
+    </div>
+    <div id="courseRows"></div>
+  </div>
+
+  <div class="filters" id="filterBar"></div>
+  <div id="calContent"></div>
+</div>
+
+<div class="overlay" id="overlay" onclick="overlayClick(event)">
+  <div class="modal">
+    <div class="modal-top">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-eyebrow" id="mEyebrow"></div>
+      <div class="modal-title" id="mTitle"></div>
+      <div class="modal-date-tag" id="mDate"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-grid" id="mGrid"></div>
+      <a class="modal-link-btn" id="mLink" href="#" target="_blank">📁 Ver archivo de contenido →</a>
+    </div>
+  </div>
+</div>
+
+<script>
+const COURSES = [
+  { id:0, name:'Asesoría Farmacéutica · Farmacéuticos', short:'Asesoría Farm.', color:'#3b5fe2', colorLt:'#eef1fd',
+    population:'Farmacéuticos', duration:'4 horas', total:40,
+    link:'https://docs.google.com/presentation/d/1LGfclWtG3-iPiMlfJIgcJDyFKEJUyRdSzKl7eWNHG9M/edit?slide=id.p1#slide=id.p1',
+    facilitators:'Reinaldo Contreras, Yessika Santos, Soledad Diaz Otañez, Cecilia Soria, Rafael Amaro' },
+  { id:1, name:'Asesoría Farmacéutica · Auxiliares', short:'Asesoría Aux.', color:'#27ae60', colorLt:'#e9f7ef',
+    population:'Personal base de farmacia', duration:'4 horas', total:200, displaySessions:7,
+    link:'https://docs.google.com/presentation/d/1LGfclWtG3-iPiMlfJIgcJDyFKEJUyRdSzKl7eWNHG9M/edit?slide=id.p1#slide=id.p1',
+    facilitators:'Reinaldo Contreras, Yessika Santos, Soledad Diaz Otañez, Cecilia Soria, Rafael Amaro' },
+  { id:2, name:'Servicio al Cliente y 5 Conductas', short:'Servicio Cliente', color:'#e67e22', colorLt:'#fef3e7',
+    population:'Base', duration:'2.5 horas', total:300, displaySessions:11,
+    link:'https://docs.google.com/document/d/1SdJg00FOlAJ58igMBFakVQJWFvpHOZyBtEDJOP5AI_8/edit?tab=t.0',
+    facilitators:'Cristian Diaz, Oswaldo Saldivia, Carlos Carrión' },
+  { id:3, name:'Orden y Limpieza · Piso de Ventas', short:'Orden y Limpieza', color:'#e74c3c', colorLt:'#fdecea',
+    population:'Supervisores', duration:'4 horas', total:111,
+    link:'https://docs.google.com/document/d/1dWsYU8fl6dYglVpahdahO3CdsDSMU3msC-42DOSeZ8g/edit?tab=t.0',
+    facilitators:'Gerentes de área' },
+  { id:4, name:'Pilares de la Operación', short:'Pilares Op.', color:'#8e44ad', colorLt:'#f5eefa',
+    population:'Supervisores', duration:'4 horas', total:111,
+    link:'https://docs.google.com/document/d/1OQAMR61w9wkcc1pHOluiWblImdW8Ysdx_dE3bqv9kxQ/edit?tab=t.0',
+    facilitators:'Gerentes de área' },
+  { id:5, name:'Conteo y Ajuste de Inventario', short:'Inventario', color:'#16a085', colorLt:'#e8f8f5',
+    population:'Supervisores', duration:'4 horas', total:111,
+    link:'https://docs.google.com/document/d/1bF0szNOUwmYi4V-oC51TZ_v08tZnVkufIbQuxpeBs3o/edit?tab=t.0',
+    facilitators:'Gerentes de área' },
+];
+
+const SESSIONS = [
+  {date:'2026-06-16',cid:0,group:'G1'},{date:'2026-06-18',cid:0,group:'G2'},
+  {date:'2026-06-16',cid:1,group:'G1'},{date:'2026-06-18',cid:1,group:'G2'},
+  {date:'2026-06-23',cid:1,group:'G3 y G4'},{date:'2026-06-25',cid:1,group:'G5 y G6'},{date:'2026-06-30',cid:1,group:'G7'},
+  {date:'2026-07-01',cid:2,group:'G1, G2 y G3'},{date:'2026-07-03',cid:2,group:'G4, G5 y G6'},
+  {date:'2026-07-06',cid:2,group:'G7, G8 y G9'},{date:'2026-07-08',cid:2,group:'G10 y G11'},
+  {date:'2026-06-22',cid:3,group:'Tienda 1'},{date:'2026-06-23',cid:3,group:'Tienda 2'},
+  {date:'2026-06-24',cid:3,group:'Tienda 3'},{date:'2026-06-25',cid:3,group:'Tienda 4'},
+  {date:'2026-06-26',cid:3,group:'Tienda 5'},{date:'2026-06-29',cid:3,group:'Tienda 6'},
+  {date:'2026-06-30',cid:3,group:'Tienda 7'},{date:'2026-07-01',cid:3,group:'Tienda 8'},
+  {date:'2026-07-02',cid:3,group:'Tienda 9'},{date:'2026-07-03',cid:3,group:'Tienda 10'},
+  {date:'2026-07-06',cid:4,group:'Tienda 1'},{date:'2026-07-07',cid:4,group:'Tienda 2'},
+  {date:'2026-07-08',cid:4,group:'Tienda 3'},{date:'2026-07-09',cid:4,group:'Tienda 4'},
+  {date:'2026-07-10',cid:4,group:'Tienda 5'},{date:'2026-07-13',cid:4,group:'Tienda 6'},
+  {date:'2026-07-14',cid:4,group:'Tienda 7'},{date:'2026-07-15',cid:4,group:'Tienda 8'},
+  {date:'2026-07-16',cid:4,group:'Tienda 9'},{date:'2026-07-17',cid:4,group:'Tienda 10'},
+  {date:'2026-07-20',cid:5,group:'Tienda 1'},{date:'2026-07-21',cid:5,group:'Tienda 2'},
+  {date:'2026-07-22',cid:5,group:'Tienda 3'},{date:'2026-07-23',cid:5,group:'Tienda 4'},
+  {date:'2026-07-24',cid:5,group:'Tienda 5'},{date:'2026-07-27',cid:5,group:'Tienda 6'},
+  {date:'2026-07-28',cid:5,group:'Tienda 7'},{date:'2026-07-29',cid:5,group:'Tienda 8'},
+  {date:'2026-07-30',cid:5,group:'Tienda 9'},{date:'2026-07-31',cid:5,group:'Tienda 10'},
+];
+
+const byDate = {};
+SESSIONS.forEach(s => { if(!byDate[s.date]) byDate[s.date]={}; byDate[s.date][s.cid]=s; });
+
+const DAYS   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+const MONTHS = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+let active = new Set(COURSES.map(c=>c.id));
+
+function ds(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+
+// Returns workdays for a month, but only from the first date that has a session onward
+function relevantWorkdays(y, m, sessions) {
+  const all = [];
+  const d = new Date(y, m-1, 1);
+  while(d.getMonth() === m-1) {
+    if(d.getDay()!==0 && d.getDay()!==6) all.push(new Date(d));
+    d.setDate(d.getDate()+1);
+  }
+  // Find first day of month that has a session
+  const monthSessions = sessions.filter(s => {
+    const sd = new Date(s.date);
+    return sd.getFullYear()===y && sd.getMonth()===m-1;
+  });
+  if(monthSessions.length === 0) return all;
+  const minDate = monthSessions.map(s=>s.date).sort()[0];
+  // Find which Monday-week that date belongs to, start from that week's Monday
+  const minD = new Date(minDate);
+  // Find the workday index of minD in all[], then go back to start of its week
+  const minIdx = all.findIndex(d => ds(d)===minDate);
+  // Find start of that week (go back to the Monday of that week)
+  const weekStart = Math.floor(minIdx / 5) * 5;
+  return all.slice(weekStart);
+}
+
+function weeksOf(days){
+  const w=[], c=[];
+  days.forEach((d,i)=>{ c.push(d); if(c.length===5||i===days.length-1){w.push([...c]);c.splice(0);} });
+  return w;
+}
+
+function renderKPIs(){
+  document.getElementById('kpiRow').innerHTML=[
+    {val:'6',lbl:'Cursos planificados',color:'var(--blue)'},
+    {val:'31',lbl:'Tiendas incluidas',color:'var(--purple)'},
+  ].map(k=>`<div class="kpi">
+    <div class="kpi-val" style="color:${k.color}">${k.val}</div>
+    <div class="kpi-lbl">${k.lbl}</div>
+    <div class="kpi-bar" style="background:${k.color}"></div>
+  </div>`).join('');
+}
+
+function renderCourses(){
+  const container = document.getElementById('courseRows');
+  container.innerHTML = '';
+  COURSES.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'course-row';
+    row.innerHTML = `
+      <div class="course-color-bar" style="background:${c.color}"></div>
+      <div class="course-info">
+        <div class="course-name">${c.name}</div>
+        <div class="course-pop">${c.population}</div>
+      </div>
+      <div class="course-meta">
+        <span class="tag" style="background:${c.colorLt};color:${c.color}">⏱ ${c.duration}</span>
+        <span class="tag" style="background:#f0f2fa;color:var(--navy)">👥 ${c.total} pers.</span>
+        <span class="tag" style="background:#f0f2fa;color:var(--text-mid)">${c.displaySessions||SESSIONS.filter(s=>s.cid===c.id).length} sesiones</span>
+        <span class="tag" style="background:${c.colorLt};color:${c.color};letter-spacing:.02em">Ver detalle →</span>
+      </div>`;
+    row.onclick = () => openCourseModal(c);
+    container.appendChild(row);
+  });
+}
+
+function openCourseModal(c){
+  const totalSess = c.displaySessions || SESSIONS.filter(s=>s.cid===c.id).length;
+  document.getElementById('mEyebrow').style.color=c.color;
+  document.getElementById('mEyebrow').textContent='📋 Resumen del Curso';
+  document.getElementById('mTitle').textContent=c.name;
+  const dateBadge = document.getElementById('mDate');
+  dateBadge.style.background=c.colorLt;
+  dateBadge.style.color=c.color;
+  dateBadge.textContent='Junio – Julio 2026';
+  document.getElementById('mGrid').innerHTML=`
+    <div class="mfield"><div class="mfield-lbl">👥 Población a invitar</div><div class="mfield-val">${c.population}</div></div>
+    <div class="mfield"><div class="mfield-lbl">⏱ Duración</div><div class="mfield-val">${c.duration}</div></div>
+    <div class="mfield"><div class="mfield-lbl">🔢 Cant. personas</div><div class="mfield-val">${c.total} personas</div></div>
+    <div class="mfield"><div class="mfield-lbl">📅 Total sesiones</div><div class="mfield-val">${totalSess} sesiones</div></div>
+    <div class="mfield wide"><div class="mfield-lbl">🎓 Facilitador(es)</div><div class="mfield-val">${c.facilitators}</div></div>`;
+  document.getElementById('mLink').style.background=c.color;
+  document.getElementById('mLink').href=c.link;
+  document.getElementById('overlay').classList.add('open');
+}
+
+function renderFilters(){
+  const bar=document.getElementById('filterBar');
+  bar.innerHTML='<span class="filter-label">Filtrar:</span>';
+  COURSES.forEach(c=>{
+    const btn=document.createElement('button');
+    btn.className='filter-btn '+(active.has(c.id)?'active':'inactive');
+    btn.innerHTML=`<span class="filter-dot" style="background:${c.color}"></span>${c.short}`;
+    btn.onclick=()=>{ active.has(c.id)?active.delete(c.id):active.add(c.id); renderFilters(); renderCalendar(); };
+    bar.appendChild(btn);
+  });
+}
+
+function renderCalendar(){
+  const cont=document.getElementById('calContent');
+  cont.innerHTML='';
+
+  [{y:2026,m:6},{y:2026,m:7}].forEach(({y,m})=>{
+    const wds = relevantWorkdays(y, m, SESSIONS);
+    const wks = weeksOf(wds);
+    const visibleCourses = COURSES.filter(c=>active.has(c.id));
+    const cnt = SESSIONS.filter(s=>{ const d=new Date(s.date); return d.getFullYear()===y&&d.getMonth()===m-1&&active.has(s.cid); }).length;
+
+    // Build a flat list of days with their week index for alternating bg
+    const dayWeekIndex = {}; // ds(day) → weekIndex
+    wks.forEach((week,wi) => week.forEach(day => dayWeekIndex[ds(day)] = wi));
+
+    const block = document.createElement('div');
+    block.className='month-block';
+    block.innerHTML=`<div class="month-header-row">
+      <div class="month-badge">${MONTHS[m-1]} ${y}</div>
+      <div class="month-line"></div>
+      
+    </div>`;
+
+    const wrap = document.createElement('div');
+    wrap.className='cal-wrap';
+    const scroll = document.createElement('div');
+    scroll.className='cal-scroll';
+    const table = document.createElement('table');
+    table.className='cal-table';
+
+    // Column widths: label col fixed, data cols equal
+    const colgroup = document.createElement('colgroup');
+    const labelCol = document.createElement('col');
+    labelCol.style.width='150px';
+    colgroup.appendChild(labelCol);
+    wds.forEach(()=>{
+      const col=document.createElement('col');
+      col.style.width='88px';
+      colgroup.appendChild(col);
+    });
+    table.appendChild(colgroup);
+
+    // THEAD
+    const thead=document.createElement('thead');
+    const headRow=document.createElement('tr');
+
+    // Corner
+    const cornerTh=document.createElement('th');
+    cornerTh.className='label-th';
+    cornerTh.style.cssText='background:#f8f9fd;';
+    headRow.appendChild(cornerTh);
+
+    // Date headers — alternating week bg, no week label text
+    wds.forEach(day=>{
+      const wi=dayWeekIndex[ds(day)];
+      const th=document.createElement('th');
+      th.className = wi%2===0 ? 'week-even' : 'week-odd';
+      th.innerHTML=`<div class="date-box">
+        <div class="date-box-dayname">${DAYS[day.getDay()]}</div>
+        <div class="date-box-num">${day.getDate()}</div>
+      </div>`;
+      headRow.appendChild(th);
+    });
+    thead.appendChild(headRow);
+    table.appendChild(thead);
+
+    // TBODY
+    const tbody=document.createElement('tbody');
+
+    if(visibleCourses.length===0){
+      const tr=document.createElement('tr');
+      const td=document.createElement('td');
+      td.colSpan=wds.length+1;
+      td.style.cssText='text-align:center;padding:32px;color:var(--text-soft);font-weight:700;font-size:13px;';
+      td.textContent='No hay cursos seleccionados.';
+      tr.appendChild(td); tbody.appendChild(tr);
+    } else {
+      visibleCourses.forEach(c=>{
+        const tr=document.createElement('tr');
+
+        const labelTd=document.createElement('td');
+        labelTd.className='row-label-col';
+        labelTd.innerHTML=`<div class="row-label-inner">
+          <div class="row-label-bar" style="background:${c.color}"></div>
+          <div>
+            <div class="row-label-name">${c.short}</div>
+            <div class="row-label-pop">${c.population}</div>
+          </div>
+        </div>`;
+        tr.appendChild(labelTd);
+
+        wds.forEach(day=>{
+          const key=ds(day);
+          const td=document.createElement('td');
+          td.className='data-cell';
+          const sess=byDate[key]&&byDate[key][c.id];
+          if(sess){
+            const pill=document.createElement('div');
+            pill.className='sess-pill';
+            pill.style.cssText=`background:${c.colorLt};border-left-color:${c.color};`;
+            pill.innerHTML=`<div class="sess-pill-name">${c.short}</div>
+              <div class="sess-pill-group" style="color:${c.color}">📦 ${sess.group}</div>`;
+            pill.addEventListener('mouseenter',()=>{ pill.style.filter='brightness(.93)'; pill.style.transform='translateY(-1px)'; pill.style.boxShadow='var(--shadow)'; });
+            pill.addEventListener('mouseleave',()=>{ pill.style.filter=''; pill.style.transform=''; pill.style.boxShadow=''; });
+            pill.onclick=()=>openModal(sess,day);
+            td.appendChild(pill);
+          } else {
+            td.innerHTML='<div class="empty-cell"><div class="empty-dash"></div></div>';
+          }
+          tr.appendChild(td);
+        });
+        tbody.appendChild(tr);
+      });
+    }
+
+    table.appendChild(tbody);
+    scroll.appendChild(table);
+    wrap.appendChild(scroll);
+    block.appendChild(wrap);
+    cont.appendChild(block);
+  });
+}
+
+function openModal(sess,day){
+  const c=COURSES[sess.cid];
+  const dateStr=`${DAYS[day.getDay()]} ${day.getDate()} de ${MONTHS[day.getMonth()]} ${day.getFullYear()}`;
+  document.getElementById('mEyebrow').style.color=c.color;
+  document.getElementById('mEyebrow').textContent='📚 Detalle de la Formación';
+  document.getElementById('mTitle').textContent=c.name;
+  const dateBadge=document.getElementById('mDate');
+  dateBadge.style.background='var(--blue-lt)';
+  dateBadge.style.color='var(--blue)';
+  dateBadge.textContent='📅 '+dateStr;
+  document.getElementById('mGrid').innerHTML=`
+    <div class="mfield"><div class="mfield-lbl">👥 Población a invitar</div><div class="mfield-val">${c.population}</div></div>
+    <div class="mfield"><div class="mfield-lbl">⏱ Duración</div><div class="mfield-val">${c.duration}</div></div>
+    <div class="mfield"><div class="mfield-lbl">🔢 Cant. personas</div><div class="mfield-val">${c.total} personas</div></div>
+    <div class="mfield"><div class="mfield-lbl">📦 Grupo / Sesión</div><div class="mfield-val">${sess.group}</div></div>
+    <div class="mfield wide"><div class="mfield-lbl">🎓 Facilitador(es)</div><div class="mfield-val">${c.facilitators}</div></div>`;
+  document.getElementById('mLink').style.background=c.color;
+  document.getElementById('mLink').href=c.link;
+  document.getElementById('overlay').classList.add('open');
+}
+function overlayClick(e){ if(e.target===document.getElementById('overlay'))closeModal(); }
+function closeModal(){ document.getElementById('overlay').classList.remove('open'); }
+document.addEventListener('keydown',e=>{ if(e.key==='Escape')closeModal(); });
+
+renderKPIs(); renderCourses(); renderFilters(); renderCalendar();
+</script>
+</body>
+</html>
